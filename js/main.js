@@ -78,7 +78,10 @@ class Thumb extends DomElement{
   }
 
   deselect() { this.highlight = false }
-  select() { this.highlight = true }
+  select() {
+    this.highlight = true
+    this.dom.scrollIntoView(false)
+  }
 
   set highlight(value) {
     const HIGHLIGHT_CLASS_NAME = ' highlight'
