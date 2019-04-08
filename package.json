@@ -1,0 +1,10 @@
+{
+  "name": "onboarding",
+  "version": "1.0.0",
+  "description": "Onboarding for DAZN 2.0 by Vladimir Minkin",
+  "main": "index.js",
+  "repository": "ssh://git@stash.massiveinteractive.com:7999/sandbox/vladimir-minkin-onboarding.git",
+  "author": "Vladimir Minkin <Vladimir.Minkin@massive.co>",
+  "license": "MIT",
+  "dependencies": {}
+}
