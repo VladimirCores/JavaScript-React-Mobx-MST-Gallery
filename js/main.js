@@ -8,9 +8,9 @@ class DomElement {
 
   addElement(element) { this.domElements.push(element) }
 
-  deselect() { /* abstract */ }
-  select() { /* abstract */ }
-  update(data) { this.domElements.forEach((domElement) => domElement.update(data)) }
+  deselect() { /* abstract */ this.domElements.forEach((domElement) => domElement.deselect())  }
+  select() { /* abstract */ this.domElements.forEach((domElement) => domElement.select())  }
+  update(data) { /* abstract */ this.domElements.forEach((domElement) => domElement.update(data)) }
 
   show() {
     this.domElements.forEach((domElement) => domElement.show())
@@ -71,7 +71,7 @@ class Thumb extends DomElement{
   constructor(parent, width, height, url) {
     const dom = document.createElement('div')
     super(parent, dom)
-    let style = dom.style;
+    let style = dom.style
     style.width = width + 'px'
     style.height = height + 'px'
     style.backgroundImage = `url(${url})`
@@ -99,7 +99,7 @@ class Image extends DomElement {
   constructor(parentDom, width, height, url) {
     const dom = document.createElement("img")
     super(parentDom, dom)
-    let style = dom.style;
+    let style = dom.style
     style.width = width + "px"
     style.height = 'auto'
     this.update(url)
@@ -127,7 +127,6 @@ class GalleryController {
   constructor(gallery) {
     this.gallery = gallery
     this.selectedIndex = 0
-    this.expanded = false
     this.lightroom = null
     this.images = []
   }
@@ -152,34 +151,31 @@ class GalleryController {
       event = event || window.event
       if (event.keyCode == '37') {
         this.navigateToImageWithOffset(-1)
-        if (this.expanded) {
-          this.collapse()
-          this.expand(this.selectedIndex);
-        }
+
       }
       else if (event.keyCode == '39') {
         this.navigateToImageWithOffset(1)
-        if (this.expanded) {
-          this.collapse()
-          this.expand(this.selectedIndex);
-        }
       }
       else if (event.keyCode == '13') {
-        if (!this.expanded)
-          this.expand(this.selectedIndex)
-        else this.collapse()
+        if (!this.lightroom) this.expandLightRoom(this.selectedIndex)
+        else this.collapseLightRoom()
       }
     }
   }
 
-  collapse() {
-    this.expanded = false
-    this.lightroom.hide()
-    this.lightroom = null;
+  updateLightRoom(index) {
+    let imageVO = this.images[index]
+    let url = imageVO.path + imageVO.name
+    this.lightroom.update(url)
   }
 
-  expand(index) {
-    let imageVO = this.images[index];
+  collapseLightRoom() {
+    this.lightroom.dispose()
+    this.lightroom = null
+  }
+
+  expandLightRoom(index) {
+    let imageVO = this.images[index]
     this.lightroom = new LightRoom(this.gallery.parent)
     this.lightroom.addElement(new Image(
       this.lightroom.dom,
@@ -188,7 +184,6 @@ class GalleryController {
       imageVO.path + imageVO.name
     ))
     this.lightroom.show()
-    this.expanded = true
   }
 
   select(index) {
@@ -201,6 +196,8 @@ class GalleryController {
     let nextSelectedIndex = this.selectedIndex + offset
     nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
     this.select(nextSelectedIndex)
+    if (this.lightroom)
+      this.updateLightRoom(nextSelectedIndex)
   }
 }
 
