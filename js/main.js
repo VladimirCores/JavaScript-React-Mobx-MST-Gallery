@@ -1,11 +1,19 @@
-class Component {
+class DomElement {
   constructor(parent, dom) {
     this.parent = parent
     this.dom = dom
+    this.domElements = []
     this.dom.className = this.constructor.name
   }
 
+  addElement(element) { this.domElements.push(element) }
+
+  deselect() { /* abstract */ }
+  select() { /* abstract */ }
+  update(data) { this.domElements.forEach((domElement) => domElement.update(data)) }
+
   show() {
+    this.domElements.forEach((domElement) => domElement.show())
     this.parent.appendChild(this.dom)
   }
 
@@ -22,7 +30,7 @@ class Component {
   }
 }
 
-class Spinner extends Component {
+class Spinner extends DomElement {
   constructor(parent) {
     const dom = document.createElement("div")
     super(parent, dom)
@@ -59,14 +67,18 @@ class GalleryLoader {
   }
 }
 
-class Thumb extends Component{
+class Thumb extends DomElement{
   constructor(parent, width, height, url) {
     const dom = document.createElement('div')
     super(parent, dom)
-    dom.style.width = width + 'px'
-    dom.style.height = height + 'px'
-    dom.style.backgroundImage = `url(${url})`
+    let style = dom.style;
+    style.width = width + 'px'
+    style.height = height + 'px'
+    style.backgroundImage = `url(${url})`
   }
+
+  deselect() { this.highlight = false }
+  select() { this.highlight = true }
 
   set highlight(value) {
     const HIGHLIGHT_CLASS_NAME = ' highlight'
@@ -76,77 +88,38 @@ class Thumb extends Component{
   }
 }
 
-class Lightroom extends Component {
-  constructor(parentDom, url) {
+class LightRoom extends DomElement {
+  constructor(parentDom) {
     const dom = document.createElement("div")
     super(parentDom, dom)
+  }
+}
+
+class Image extends DomElement {
+  constructor(parentDom, width, height, url) {
+    const dom = document.createElement("img")
+    super(parentDom, dom)
+    let style = dom.style;
+    style.width = width + "px"
+    style.height = 'auto'
     this.update(url)
   }
 
-  update(url) {
-    this.dom.style.backgroundImage = `url(${url})`
-  }
+  update(url) { this.dom.src = url }
 }
 
-class Image extends Component {
-  constructor(parentDom, width, height, url) {
-    const dom = document.createElement("div")
-    dom.dataset["width"] = width;
-    dom.dataset["height"] = height;
-    dom.dataset["url"] = url;
-    super(parentDom, dom)
-    this.thumb = null
-  }
-
-  setThumb(value) { this.thumb = value }
-
-  deselect() {
-    this.dom.dataset["selected"] = false
-    this.thumb.highlight = false
-  }
-
-  select() {
-    this.dom.dataset["selected"] = true
-    this.thumb.highlight = true
-  }
-
-  show() {
-    this.thumb.show()
-    super.show()
-  }
-}
-
-class Gallery extends Component {
+class Gallery extends DomElement {
   constructor(parent) {
     const dom = document.createElement("div")
     super(parent, dom)
-    this.domImages = []
-    this.selectedImage = null
-    this.lightroom = null;
+    this.selectedElement = null
   }
-
-  addImage(image) { this.domImages.push(image) }
 
   select(nextSelectedIndex) {
-    let nextSelectedImage = this.domImages[nextSelectedIndex]
-    if (this.selectedImage) this.selectedImage.deselect()
-    this.selectedImage = nextSelectedImage
-    nextSelectedImage.select()
-  }
-
-  show() {
-    this.domImages.forEach((image) => image.show())
-    super.show()
-  }
-
-  expand(url) {
-    this.lightroom = new Lightroom(this.dom, url)
-    this.lightroom.show()
-  }
-
-  collapse() {
-    this.lightroom.hide()
-    this.lightroom = null
+    let nextSelectedElement = this.domElements[nextSelectedIndex]
+    if (this.selectedElement) this.selectedElement.deselect()
+    this.selectedElement = nextSelectedElement
+    nextSelectedElement.select()
   }
 }
 
@@ -155,6 +128,7 @@ class GalleryController {
     this.gallery = gallery
     this.selectedIndex = 0
     this.expanded = false
+    this.lightroom = null
     this.images = []
   }
 
@@ -162,22 +136,15 @@ class GalleryController {
     let galleryDom = this.gallery
     this.images = jsonData.images
     this.images.forEach((imageVO) => {
-      let imageDom = new Image(
-        galleryDom.dom,
-        imageVO.width,
-        imageVO.height,
-        imageVO.path + imageVO.name
-      )
       let thumbVO = imageVO.thumb
       let thumbDom = new Thumb(
-        imageDom.dom,
+        galleryDom.dom,
         thumbVO.width,
         thumbVO.height,
         thumbVO.path + thumbVO.name
       )
 
-      imageDom.setThumb(thumbDom)
-      galleryDom.addImage(imageDom)
+      galleryDom.addElement(thumbDom)
     })
 
     document.onkeydown = (event) => {
@@ -207,14 +174,21 @@ class GalleryController {
 
   collapse() {
     this.expanded = false
-    this.gallery.collapse()
+    this.lightroom.hide()
+    this.lightroom = null;
   }
 
   expand(index) {
     let imageVO = this.images[index];
-    let url = imageVO.path + imageVO.name;
+    this.lightroom = new LightRoom(this.gallery.parent)
+    this.lightroom.addElement(new Image(
+      this.lightroom.dom,
+      imageVO.width,
+      imageVO.height,
+      imageVO.path + imageVO.name
+    ))
+    this.lightroom.show()
     this.expanded = true
-    this.gallery.expand(url)
   }
 
   select(index) {
