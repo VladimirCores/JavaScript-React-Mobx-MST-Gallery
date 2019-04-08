@@ -7,7 +7,7 @@ const ImageDownload = require('image-downloader')
 
 const OUTPUT_DIR_ROOT = AppRoot + '/../../'
 const OUTPUT_DIR = 'img/gallery/'
-const IMAGES_COUNT = 5
+const IMAGES_COUNT = 10
 const IMAGE_THEME = 'nature'
 const IMAGE_WIDTH = 640
 const IMAGE_HEIGHT = 480
@@ -42,6 +42,7 @@ async function Generate() {
       await FS.outputFile(thumbPath, thumbnail)
 
       images.push({
+        id: FakerRandom.uuid(),
         title: FakerRandom.words(),
         thumb: {
           width: IMAGE_THUMB_WIDTH,
@@ -66,7 +67,7 @@ async function Generate() {
 }
 
 Generate().then((result) => {
-  FS.outputJsonSync('../db.json', result, { spaces:'\t' })
+  FS.outputJsonSync(AppRoot + '/../db.json', result, { spaces:'\t' })
   console.log("========= GENERATED GALLERY DATA ===========\n", result);
   console.log("============================================");
   console.log("============ WAIT A MOMENT =================");
