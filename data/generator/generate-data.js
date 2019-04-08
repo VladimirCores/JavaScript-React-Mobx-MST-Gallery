@@ -1,14 +1,14 @@
-const AppRoot = require('app-root-path');
-const FS = require('fs-extra');
+const AppRoot = require('app-root-path')
+const FS = require('fs-extra')
 const FakerImage = require('faker').image
 const FakerRandom = require('faker').random
-const ImageThumbnail = require('image-thumbnail');
+const ImageThumbnail = require('image-thumbnail')
 const ImageDownload = require('image-downloader')
 
 const OUTPUT_DIR_ROOT = AppRoot + '/../../'
 const OUTPUT_DIR = 'img/gallery/'
 const IMAGES_COUNT = 10
-const IMAGE_THEME = 'nature'
+const IMAGE_THEME = '' // empty means anything
 const IMAGE_WIDTH = 640
 const IMAGE_HEIGHT = 480
 const IMAGE_EXT = '.jpeg'
@@ -22,11 +22,10 @@ const IMAGE_THUMB_OPTION = {
   responseType: 'buffer'
 }
 
-var counter = IMAGES_COUNT
-
 async function Generate() {
-  const images = [];
-  await FS.emptyDir(OUTPUT_DIR_ROOT + OUTPUT_DIR);
+  const images = []
+  await FS.emptyDir(OUTPUT_DIR_ROOT + OUTPUT_DIR)
+  let counter = IMAGES_COUNT
   while (counter--)
   {
     let url = FakerImage.imageUrl(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_THEME)
@@ -56,19 +55,19 @@ async function Generate() {
         name: imageName
       })
 
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error(err) }
   }
   const result = {
     gallery: {
       images: images
     }
-  };
-  return result;
+  }
+  return result
 }
 
 Generate().then((result) => {
   FS.outputJsonSync(AppRoot + '/../db.json', result, { spaces:'\t' })
-  console.log("========= GENERATED GALLERY DATA ===========\n", result);
-  console.log("============================================");
-  console.log("============ WAIT A MOMENT =================");
+  console.log("========= GENERATED GALLERY DATA ===========\n", result)
+  console.log("============================================")
+  console.log("============ WAIT A MOMENT =================")
 })
