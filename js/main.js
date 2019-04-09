@@ -42,7 +42,7 @@ class Spinner extends DomElement {
 
 class GalleryLoader {
   static get API_GALLERY_URL() {
-    return 'http://localhost:3000/gallery'
+    return 'http://localhost:4321/gallery'
   }
 
   constructor() {
