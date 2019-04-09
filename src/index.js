@@ -1,22 +1,36 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
 import GalleryLoader from './model/loader/GalleryLoader'
-import GalleryController from './controller/GalleryController'
-import Gallery from './view/gallery/Gallery'
+import GalleryController from './view/gallery/GalleryController'
 import Spinner from './view/misc/Spinner'
 
-// MAIN PROCESS
-(function () {
-  const domRoot = document.getElementById("Root")
-  const gallery = new Gallery(domRoot)
-  const spinner = new Spinner(domRoot)
+class App extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            loading: true,
+            data: null
+        }
+    }
 
-  const galleryController = new GalleryController(gallery)
+    componentDidMount() {
+        new GalleryLoader().load((data) => {
+            this.setState({
+                data: data,
+                loading: false
+            })
+        })
+    }
 
-  new GalleryLoader().load(function (jsonData) {
-    galleryController.setup(jsonData)
-    galleryController.select(0)
-    gallery.show()
-    spinner.hide()
-  })
+    renderGallery() {
+        let images = this.state.data.images
+        let Controller = GalleryController(images)
+        return <Controller/>
+    }
 
-  spinner.show()
-})()
+    render() {
+        return (<div> {this.state.loading ? <Spinner/> : this.renderGallery()} </div>)
+    }
+}
+
+ReactDOM.render(<App/>, document.getElementById('Root'))

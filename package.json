@@ -4,7 +4,7 @@
   "description": "Onboarding for DAZN 2.0 by Vladimir Minkin",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --open --hot",
     "watch": "webpack --watch",
     "build": "webpack"
   },
@@ -12,15 +12,24 @@
   "author": "Vladimir Minkin <Vladimir.Minkin@massive.co>",
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "^7.4.3",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
-    "@babel/plugin-transform-runtime": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^6.26.3",
     "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^2.1.1",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.0"
   }
 }

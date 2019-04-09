@@ -1,18 +1,15 @@
+import React from 'react'
 import DomElement from '../base/DomElement'
 
 class Gallery extends DomElement {
-  constructor(parent) {
-    const dom = document.createElement("div")
-    super(parent, dom)
-    this.selectedElement = null
-  }
-
-  select(nextSelectedIndex) {
-    let nextSelectedElement = this.domElements[nextSelectedIndex]
-    if (this.selectedElement) this.selectedElement.deselect()
-    this.selectedElement = nextSelectedElement
-    nextSelectedElement.select()
-  }
+    render() {
+        return (
+            <div className={this.className}>
+                <h1 style={{color: 'black'}}>IMAGE GALLERY</h1>
+                {this.props.children}
+            </div>
+        )
+    }
 }
 
 export default Gallery

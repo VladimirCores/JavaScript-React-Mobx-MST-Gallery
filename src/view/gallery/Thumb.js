@@ -1,27 +1,24 @@
+import React from 'react'
 import DomElement from '../base/DomElement'
 
-class Thumb extends DomElement{
-  constructor(parent, width, height, url) {
-    const dom = document.createElement('div')
-    super(parent, dom)
-    let style = dom.style
-    style.width = width + 'px'
-    style.height = height + 'px'
-    style.backgroundImage = `url(${url})`
-  }
+class Thumb extends DomElement {
+    get className() { return super.className + (this.props.selected ? ' highlight' : '') }
 
-  deselect() { this.highlight = false }
-  select() {
-    this.highlight = true
-    this.dom.scrollIntoView(false)
-  }
+    componentDidUpdate() {
+        if (this.props.selected)
+            this.refs.dom.scrollIntoView(false);
+    }
 
-  set highlight(value) {
-    const HIGHLIGHT_CLASS_NAME = ' highlight'
-    this.dom.className = value ?
-      this.dom.className + HIGHLIGHT_CLASS_NAME
-      : this.dom.className.replace(HIGHLIGHT_CLASS_NAME, '')
-  }
+    render() {
+        const style = {
+            width: this.props.width,
+            height: this.props.height,
+            backgroundImage: `url(${this.props.url})`,
+        };
+        return (
+            <div className={this.className} ref="dom" style={style}/>
+        );
+    }
 }
 
 export default Thumb

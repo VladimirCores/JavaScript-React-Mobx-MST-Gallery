@@ -1,33 +1,16 @@
-class DomElement {
-  constructor(parent, dom) {
-    this.parent = parent
-    this.dom = dom
-    this.domElements = []
-    this.dom.className = this.constructor.name
-  }
+import React from 'react'
 
-  addElement(element) { this.domElements.push(element) }
+class DomElement extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            className: this.constructor.name
+        }
+    }
 
-  deselect() { /* abstract */ this.domElements.forEach((domElement) => domElement.deselect())  }
-  select() { /* abstract */ this.domElements.forEach((domElement) => domElement.select())  }
-  update(data) { /* abstract */ this.domElements.forEach((domElement) => domElement.update(data)) }
-
-  show() {
-    this.domElements.forEach((domElement) => domElement.show())
-    this.parent.appendChild(this.dom)
-  }
-
-  hide() {
-    this.parent.removeChild(this.dom)
-  }
-
-  dispose() {
-    if (this.dom.parentNode != null)
-      this.hide()
-
-    this.dom = null
-    this.parent = null
-  }
+    get className() {
+        return this.state.className
+    }
 }
 
 export default DomElement

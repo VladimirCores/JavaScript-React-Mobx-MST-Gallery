@@ -5,5 +5,7 @@
 /data/generator/package-lock.json
 /dist/img/gallery/*
 /dist/main.js
+/dist/index.html
 /node_modules
 /yarn.lock
+/package-lock.json
