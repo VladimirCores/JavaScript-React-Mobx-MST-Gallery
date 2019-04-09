@@ -134,9 +134,11 @@ const Keyaboard = {
 
 class GalleryController {
   constructor(gallery) {
+    /* VIEW */
     this.gallery = gallery
-    this.selectedIndex = 0
     this.lightroom = null
+    /* MODEL */
+    this.selectedIndex = 0
     this.images = []
   }
 

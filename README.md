@@ -1,61 +1,24 @@
-# [HTML5 Boilerplate](http://html5boilerplate.com)
+# On Boarding Project
 
-HTML5 Boilerplate is a professional front-end template for building fast,
-robust, and adaptable web apps or sites.
+This is a simple galley application that examinate transition to tech stack: React + Mobx + RxJS
 
-This project is the product of many years of iterative development and combined
-community knowledge. It does not impose a specific development philosophy or
-framework, so you're free to architect your code in the way that you want.
+Before start run script that will generate gallery content and start basic "json-server": 
+**sh start.sh**
 
-* Source: [https://github.com/h5bp/html5-boilerplate](https://github.com/h5bp/html5-boilerplate)
-* Homepage: [http://html5boilerplate.com](http://html5boilerplate.com)
-* Twitter: [@h5bp](http://twitter.com/h5bp)
+Step 0. Basic plain ES6 JavaScript project.
+In this step all code in one main.js file.
+This is a simple MVC structure with passive model and passive view, where view is a complete representation of model in plain value.
 
+VIEW 
+Each DOM elements presented with JS class that is extended from DomElement which itself is a collection of other domElements. 
+These classes form view part of application, means they don't have any business logic and even don't know about each other, only in a chain of domElements (interface of DomElement).
+No business logic in the view means no private properties, only plain, parsed values from ValueObjects represented it. Remember view is always dump visual objects, not a brain.
 
-## Quick start
+MODEL
+At this time we don't need to keep any persistence data or save state from session to session, all data is static and come from single source.
+So we can keep data and state of the app (only selectedIndex) in CONTROLLER as a plain properties
 
-Choose one of the following options:
-
-1. Download the latest stable release from
-   [html5boilerplate.com](http://html5boilerplate.com/) or a custom build from
-   [Initializr](http://www.initializr.com).
-2. Clone the git repo — `git clone
-   https://github.com/h5bp/html5-boilerplate.git` - and checkout the tagged
-   release you'd like to use.
-
-
-## Features
-
-* HTML5 ready. Use the new elements with confidence.
-* Cross-browser compatible (Chrome, Opera, Safari, Firefox 3.6+, IE6+).
-* Designed with progressive enhancement in mind.
-* Includes [Normalize.css](http://necolas.github.com/normalize.css/) for CSS
-  normalizations and common bug fixes.
-* The latest [jQuery](http://jquery.com/) via CDN, with a local fallback.
-* The latest [Modernizr](http://modernizr.com/) build for feature detection.
-* IE-specific classes for easier cross-browser control.
-* Placeholder CSS Media Queries.
-* Useful CSS helpers.
-* Default print CSS, performance optimized.
-* Protection against any stray `console.log` causing JavaScript errors in
-  IE6/7.
-* An optimized Google Analytics snippet.
-* Apache server caching, compression, and other configuration defaults for
-  Grade-A performance.
-* Cross-domain Ajax and Flash.
-* "Delete-key friendly." Easy to strip out parts you don't need.
-* Extensive inline and accompanying documentation.
-
-
-## Documentation
-
-Take a look at the [documentation table of contents](doc/TOC.md). This
-documentation is bundled with the project, which makes it readily available for
-offline reading and provides a useful starting point for any documentation you
-want to write about your project.
-
-
-## Contributing
-
-Anyone and everyone is welcome to [contribute](CONTRIBUTING.md). Hundreds of
-developers have helped make the HTML5 Boilerplate what it is today.
+CONTROLLER
+The entity that orchestrate with view by making decisions on input data or business logic. 
+Since we have only one interactive element - GALLERY, and to keep it simple we use only one GalleryController
+This controller listen for document.onkeydown process it and apply change to the view
