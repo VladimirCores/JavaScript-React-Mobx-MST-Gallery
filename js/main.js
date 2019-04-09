@@ -209,11 +209,10 @@ class GalleryController {
   const domRoot = document.getElementById("Root")
   let gallery = new Gallery(domRoot)
   let spinner = new Spinner(domRoot)
-  let loader = new GalleryLoader()
 
   let controller = new GalleryController(gallery)
 
-  loader.load(function (jsonData) {
+  new GalleryLoader().load(function (jsonData) {
     controller.setup(jsonData)
     controller.select(0)
     gallery.show()

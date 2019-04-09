@@ -7,7 +7,7 @@ const ImageDownload = require('image-downloader')
 
 const OUTPUT_DIR_ROOT = AppRoot + '/../../'
 const OUTPUT_DIR = 'img/gallery/'
-const IMAGES_COUNT = 10
+const IMAGES_COUNT = 40
 const IMAGE_THEME = '' // empty means anything
 const IMAGE_WIDTH = 640
 const IMAGE_HEIGHT = 480
