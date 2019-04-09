@@ -3,4 +3,6 @@
 /data/db.json
 /data/generator/node_modules
 /data/generator/package-lock.json
-/img/gallery/*
+/dist/img/gallery/*
+/dist/main.js
+/node_modules

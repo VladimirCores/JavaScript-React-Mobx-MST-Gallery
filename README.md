@@ -6,7 +6,7 @@ Before start run script that will generate gallery content and start basic "json
 **sh start.sh**
 
 Step 0. Basic plain ES6 JavaScript project.
-In this step all code in one main.js file.
+In this step all code in one index.js file.
 This is a simple MVC structure with passive model and passive view, where view is a complete representation of model in plain value.
 
 VIEW 

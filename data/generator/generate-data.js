@@ -5,7 +5,7 @@ const FakerRandom = require('faker').random
 const ImageThumbnail = require('image-thumbnail')
 const ImageDownload = require('image-downloader')
 
-const OUTPUT_DIR_ROOT = AppRoot + '/../../'
+const OUTPUT_DIR_ROOT = AppRoot + '/../../dist/'
 const OUTPUT_DIR = 'img/gallery/'
 const IMAGES_COUNT = 40
 const IMAGE_THEME = '' // empty means anything
