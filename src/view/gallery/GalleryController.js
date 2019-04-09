@@ -5,41 +5,22 @@ import Keyboard from '../../consts/Keyboard'
 import LightRoom from './LightRoom'
 import Image from './Image'
 
-function GalleryController(input) {
+import {observer} from 'mobx-react'
+import DomElement from '../base/DomElement'
 
-    let images = input;
-
-    return class extends React.Component {
-        constructor() {
-            super()
-            this.state = {
-              selectedIndex: 0,
-              lightRoomShown: false
-            }
-        }
-
-        selectNext(offset) {
-            let amountOfImages = images.length
-            let nextSelectedIndex = this.state.selectedIndex + offset
-            nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
-            this.setState({selectedIndex:nextSelectedIndex})
-        }
-
-        toggleLightRoom() {
-            this.setState({lightRoomShown:!this.state.lightRoomShown})
-        }
-
+function GalleryController() {
+    return observer(['galleryStore'], class extends DomElement {
         onDocumentKeyboardNavigation = (event) => {
             event.stopImmediatePropagation()
             event = event || window.event
             if (event.keyCode === Keyboard.ARROW_LEFT) {
-                this.selectNext(-1)
+                this.store.selectNext(-1)
             }
             else if (event.keyCode === Keyboard.ARROW_RIGHT) {
-                this.selectNext(1)
+                this.store.selectNext(1)
             }
             else if (event.keyCode === Keyboard.ENTER) {
-                this.toggleLightRoom()
+                this.store.toggleLightRoom()
             }
         }
 
@@ -52,9 +33,9 @@ function GalleryController(input) {
         }
 
         renderLightRoom() {
-            let imageVO = images[this.state.selectedIndex]
+            let imageVO = this.store.selectedImageVO
             return (
-                <LightRoom>
+                <LightRoom title={imageVO.title}>
                     <Image width={imageVO.width}
                           height={imageVO.height}
                           url={imageVO.path + imageVO.name}/>
@@ -63,10 +44,10 @@ function GalleryController(input) {
         }
 
         renderThumbs() {
-            return images.map((imageVO, index) => {
+            return this.store.images.map((imageVO, index) => {
                 let thumbVO = imageVO.thumb
                 return <Thumb key={index}
-                              selected={this.state.selectedIndex === index}
+                              selected={this.store.isSelected(index)}
                               width={thumbVO.width}
                               height={thumbVO.height}
                               url={thumbVO.path + thumbVO.name}/>
@@ -74,12 +55,12 @@ function GalleryController(input) {
         }
 
         render() {
-            return <div>
+            return <>
                 <Gallery> { this.renderThumbs() } </Gallery>
-                { this.state.lightRoomShown ? this.renderLightRoom() : null }
-            </div>
+                { this.store.lightRoomShown ? this.renderLightRoom() : null }
+            </>
         }
-    }
+    })
 }
 
 export default GalleryController

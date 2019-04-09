@@ -8,6 +8,10 @@ class DomElement extends React.Component {
         }
     }
 
+    get store() {
+        return this.props.galleryStore
+    }
+
     get className() {
         return this.state.className
     }

@@ -1,36 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import GalleryLoader from './model/loader/GalleryLoader'
-import GalleryController from './view/gallery/GalleryController'
-import Spinner from './view/misc/Spinner'
 
-class App extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            loading: true,
-            data: null
-        }
-    }
+import {Provider} from 'mobx-react'
+import galleryStore from './model/GalleryStore'
+import GalleryApplication from './view/GalleryApplication'
 
-    componentDidMount() {
-        new GalleryLoader().load((data) => {
-            this.setState({
-                data: data,
-                loading: false
-            })
-        })
-    }
+galleryStore.requestData();
 
-    renderGallery() {
-        let images = this.state.data.images
-        let Controller = GalleryController(images)
-        return <Controller/>
-    }
-
-    render() {
-        return (<div> {this.state.loading ? <Spinner/> : this.renderGallery()} </div>)
-    }
-}
-
-ReactDOM.render(<App/>, document.getElementById('Root'))
+ReactDOM.render(
+    <Provider galleryStore={galleryStore}>
+        <GalleryApplication/>
+    </Provider>,
+    document.getElementById('Root')
+)
