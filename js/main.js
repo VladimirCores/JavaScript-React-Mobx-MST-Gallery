@@ -126,6 +126,12 @@ class Gallery extends DomElement {
   }
 }
 
+const Keyaboard = {
+  ENTER: 13,
+  ARROW_LEFT: 37,
+  ARROW_RIGHT: 39
+};
+
 class GalleryController {
   constructor(gallery) {
     this.gallery = gallery
@@ -152,14 +158,14 @@ class GalleryController {
     document.onkeydown = (event) => {
       event.stopImmediatePropagation()
       event = event || window.event
-      if (event.keyCode == '37') {
-        this.navigateToImageWithOffset(-1)
+      if (event.keyCode === Keyaboard.ARROW_LEFT) {
+        this.selectNext(-1)
 
       }
-      else if (event.keyCode == '39') {
-        this.navigateToImageWithOffset(1)
+      else if (event.keyCode === Keyaboard.ARROW_RIGHT) {
+        this.selectNext(1)
       }
-      else if (event.keyCode == '13') {
+      else if (event.keyCode === Keyaboard.ENTER) {
         if (!this.lightroom) this.expandLightRoom(this.selectedIndex)
         else this.collapseLightRoom()
       }
@@ -194,7 +200,7 @@ class GalleryController {
     this.gallery.select(index)
   }
 
-  navigateToImageWithOffset(offset) {
+  selectNext(offset) {
     let amountOfImages = this.images.length
     let nextSelectedIndex = this.selectedIndex + offset
     nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
