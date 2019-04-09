@@ -6,3 +6,4 @@
 /dist/img/gallery/*
 /dist/main.js
 /node_modules
+/yarn.lock
