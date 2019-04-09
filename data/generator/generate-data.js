@@ -1,11 +1,10 @@
-const AppRoot = require('app-root-path')
 const FS = require('fs-extra')
 const FakerImage = require('faker').image
 const FakerRandom = require('faker').random
 const ImageThumbnail = require('image-thumbnail')
 const ImageDownload = require('image-downloader')
 
-const OUTPUT_DIR_ROOT = AppRoot + '/../../dist/'
+const OUTPUT_DIR_ROOT = './dist/'
 const OUTPUT_DIR = 'img/gallery/'
 const IMAGES_COUNT = 40
 const IMAGE_THEME = '' // empty means anything
@@ -66,7 +65,7 @@ async function Generate() {
 }
 
 Generate().then((result) => {
-  FS.outputJsonSync(AppRoot + '/../db.json', result, { spaces:'\t' })
+  FS.outputJsonSync('./data/db.json', result, { spaces:'\t' })
   console.log("========= GENERATED GALLERY DATA ===========\n", result)
   console.log("============================================")
   console.log("============ WAIT A MOMENT =================")

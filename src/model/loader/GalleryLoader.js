@@ -1,5 +1,6 @@
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost';
+const API_PORT = '4321';
 const API_PATH = '/gallery';
 
 class GalleryLoader {
@@ -19,7 +20,7 @@ class GalleryLoader {
       }
     }.bind(this)
     setTimeout(() => {
-      theLoader.open("GET", API_URL + API_PATH, true) // true for asynchronous
+      theLoader.open("GET", API_URL + ':' + API_PORT + API_PATH, true) // true for asynchronous
       theLoader.send(null)
     }, 1000)
   }
