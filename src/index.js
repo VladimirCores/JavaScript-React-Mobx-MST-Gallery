@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom'
 
 import {Provider} from 'mobx-react'
 import galleryStore from './model/GalleryStore'
-import GalleryApplication from './view/GalleryApplication'
+import GalleryController from './view/GalleryController'
 
 galleryStore.requestData();
 
 ReactDOM.render(
     <Provider galleryStore={galleryStore}>
-        <GalleryApplication/>
+        <GalleryController/>
     </Provider>,
     document.getElementById('Root')
 )

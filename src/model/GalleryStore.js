@@ -3,7 +3,7 @@ import {observable, action} from 'mobx'
 
 const galleryStore = observable({
     selectedIndex: 0,
-    lightRoomShown: false,
+    lightRoomVisible: false,
     dataLoading: false,
     data: null,
 
@@ -21,11 +21,16 @@ const galleryStore = observable({
 
     get selectedImageVO() {
         return this.images[this.selectedIndex]
+    },
+
+    get selectedImageUrl() {
+        const vo = this.selectedImageVO
+        return vo.path + vo.name
     }
 });
 
 galleryStore.toggleLightRoom = action(() => {
-    galleryStore.lightRoomShown = !galleryStore.lightRoomShown
+    galleryStore.lightRoomVisible = !galleryStore.lightRoomVisible
 })
 
 galleryStore.selectNext = action((offset) => {
