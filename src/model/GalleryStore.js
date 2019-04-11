@@ -1,51 +1,55 @@
 import GalleryLoader from './loader/GalleryLoader'
-import {observable, action} from 'mobx'
+import {observable, action, computed} from 'mobx'
 
-const galleryStore = observable({
-    selectedIndex: 0,
-    lightRoomVisible: false,
-    dataLoading: false,
-    data: null,
+class GalleryStore {
+    @observable selectedIndex = 0
+    @observable lightRoomVisible = false
+    @observable dataLoading = false
+    @observable data = null
+
+    constructor() {
+        this.requestData();
+    }
 
     isSelected(index) {
         return this.selectedIndex === index
-    },
+    }
 
-    get images() {
+    @computed get images() {
         return this.data ? this.data.images : []
-    },
+    }
 
-    get amountOfImages() {
+    @computed get amountOfImages() {
         return this.images.length
-    },
+    }
 
-    get selectedImageVO() {
+    @computed get selectedImageVO() {
         return this.images[this.selectedIndex]
-    },
+    }
 
-    get selectedImageUrl() {
+    @computed get selectedImageUrl() {
         const vo = this.selectedImageVO
         return vo.path + vo.name
     }
-});
 
-galleryStore.toggleLightRoom = action(() => {
-    galleryStore.lightRoomVisible = !galleryStore.lightRoomVisible
-})
+    @action toggleLightRoom() {
+        this.lightRoomVisible = !this.lightRoomVisible
+    }
 
-galleryStore.selectNext = action((offset) => {
-    let amountOfImages = galleryStore.amountOfImages
-    let nextSelectedIndex = galleryStore.selectedIndex + offset
-    nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
-    galleryStore.selectedIndex = nextSelectedIndex
-})
+    @action selectNext(offset) {
+        let amountOfImages = this.amountOfImages
+        let nextSelectedIndex = this.selectedIndex + offset
+        nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
+        this.selectedIndex = nextSelectedIndex
+    }
 
-galleryStore.requestData = action(() => {
-    galleryStore.dataLoading = true
-    new GalleryLoader().load((data) => {
-        galleryStore.dataLoading = false
-        galleryStore.data = data
-    })
-});
+    @action requestData() {
+        this.dataLoading = true
+        new GalleryLoader().load((data) => {
+            this.dataLoading = false
+            this.data = data
+        })
+    }
+}
 
-export default galleryStore
+export default GalleryStore

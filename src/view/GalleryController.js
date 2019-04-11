@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import {observer} from 'mobx-react'
+import {observer, inject} from 'mobx-react'
 import Keyboard from '../consts/Keyboard'
 import DomElement from './base/DomElement'
 import Spinner from './misc/Spinner'
@@ -8,7 +8,9 @@ import Thumb from './gallery/Thumb'
 import LightRoom from './gallery/LightRoom'
 import Image from './gallery/Image'
 
-export default observer(['galleryStore'], class extends DomElement
+@inject('galleryStore')
+@observer
+export default class GalleryController extends DomElement
 {
     onDocumentKeyboardNavigation = (event) => {
         event.stopImmediatePropagation()
@@ -59,4 +61,4 @@ export default observer(['galleryStore'], class extends DomElement
         </Fragment>
 
     render() { return this.store.dataLoading ? <Spinner/> : this.renderGallery() }
-})
+}
