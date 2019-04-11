@@ -1,16 +1,15 @@
 import React, { Fragment } from 'react'
 import {observer, inject} from 'mobx-react'
-import Keyboard from '../consts/Keyboard'
-import DomElement from './base/DomElement'
-import Spinner from './misc/Spinner'
-import Gallery from './gallery/Gallery'
-import Thumb from './gallery/Thumb'
-import LightRoom from './gallery/LightRoom'
-import Image from './gallery/Image'
+import Keyboard from '../../../consts/Keyboard'
+import GalleryComponent from '../view/base/GalleryComponent'
+import Gallery from '../view/Gallery'
+import Thumb from '../view/Thumb'
+import LightRoom from '../view/LightRoom'
+import Image from '../view/Image'
 
 @inject('galleryStore')
 @observer
-export default class GalleryController extends DomElement
+export default class GalleryController extends GalleryComponent
 {
     onDocumentKeyboardNavigation = (event) => {
         event.stopImmediatePropagation()
@@ -54,11 +53,10 @@ export default class GalleryController extends DomElement
         />
     })
 
-    renderGallery = () =>
-        <Fragment>
+    render() {
+        return <Fragment>
             <Gallery> { this.renderThumbs() } </Gallery>
             { this.store.lightRoomVisible && this.renderLightRoom() }
         </Fragment>
-
-    render() { return this.store.dataLoading ? <Spinner/> : this.renderGallery() }
+    }
 }

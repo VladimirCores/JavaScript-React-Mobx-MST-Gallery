@@ -1,7 +1,7 @@
 import React from 'react'
-import DomElement from '../base/DomElement'
+import GalleryComponent from './base/GalleryComponent'
 
-class Thumb extends DomElement {
+class Thumb extends GalleryComponent {
     get className() { return super.className + (this.props.selected ? ' highlight' : '') }
 
     componentDidUpdate() {

@@ -1,7 +1,7 @@
 import React from 'react'
-import DomElement from '../base/DomElement'
+import GalleryComponent from '../gallery/view/base/GalleryComponent'
 
-class Spinner extends DomElement {
+class Spinner extends GalleryComponent {
     render() {
         return (
             <div className={this.className}>

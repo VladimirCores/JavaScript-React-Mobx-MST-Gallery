@@ -1,7 +1,7 @@
 import React from 'react'
-import DomElement from '../base/DomElement'
+import GalleryComponent from './base/GalleryComponent'
 
-class Image extends DomElement {
+class Image extends GalleryComponent {
     render() {
         const style = {
             width: this.props.width,

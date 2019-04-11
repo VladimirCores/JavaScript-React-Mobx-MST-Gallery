@@ -1,7 +1,7 @@
 import React from 'react'
-import DomElement from '../base/DomElement'
+import GalleryComponent from './base/GalleryComponent'
 
-class Gallery extends DomElement {
+class Gallery extends GalleryComponent {
     render() {
         return (
             <div className={this.className}>

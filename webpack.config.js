@@ -25,10 +25,10 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'style-loaders'
                     },
                     {
-                        loader: 'css-loader',
+                        loader: 'css-loaders',
                         options: {
                             modules: false,
                             importLoaders: 1,
@@ -43,7 +43,7 @@ module.exports = {
                 test: /\.(js)$/,
                 exclude: /(node_modules)/,
                 use: {
-                    loader: 'babel-loader',
+                    loader: 'babel-loaders',
                     options: {
                         presets: ['@babel/preset-env', '@babel/preset-react'],
                         plugins: [

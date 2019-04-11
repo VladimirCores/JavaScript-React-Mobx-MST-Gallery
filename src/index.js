@@ -2,12 +2,20 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import {Provider} from 'mobx-react'
-import GalleryStore from './model/GalleryStore'
-import GalleryController from './view/GalleryController'
+import RootStore from './parts/RootStore'
+import Root from './parts/Root'
+
+const rootStore = new RootStore();
+const stores = {
+    rootStore: rootStore,
+    galleryStore: rootStore.galleryStore
+}
 
 ReactDOM.render(
-    <Provider galleryStore={new GalleryStore()}>
-        <GalleryController/>
+    <Provider {...stores}>
+        <Root/>
     </Provider>,
     document.getElementById('Root')
 )
+
+rootStore.requestData();

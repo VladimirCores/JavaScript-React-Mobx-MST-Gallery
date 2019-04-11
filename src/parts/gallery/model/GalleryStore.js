@@ -1,22 +1,16 @@
-import GalleryLoader from './loader/GalleryLoader'
 import {observable, action, computed} from 'mobx'
 
 class GalleryStore {
     @observable selectedIndex = 0
     @observable lightRoomVisible = false
-    @observable dataLoading = false
     @observable data = null
-
-    constructor() {
-        this.requestData();
-    }
 
     isSelected(index) {
         return this.selectedIndex === index
     }
 
     @computed get images() {
-        return this.data ? this.data.images : []
+        return this.data.images
     }
 
     @computed get amountOfImages() {
@@ -43,12 +37,8 @@ class GalleryStore {
         this.selectedIndex = nextSelectedIndex
     }
 
-    @action requestData() {
-        this.dataLoading = true
-        new GalleryLoader().load((data) => {
-            this.dataLoading = false
-            this.data = data
-        })
+    @action setup(galleryData) {
+        this.data = galleryData
     }
 }
 

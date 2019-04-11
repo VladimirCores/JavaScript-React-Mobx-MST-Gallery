@@ -1,6 +1,6 @@
 import React from 'react'
 
-class DomElement extends React.Component {
+class GalleryComponent extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -17,4 +17,4 @@ class DomElement extends React.Component {
     }
 }
 
-export default DomElement
+export default GalleryComponent
