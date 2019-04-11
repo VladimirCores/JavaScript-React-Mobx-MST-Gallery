@@ -1,21 +1,27 @@
-import {action, computed, observable} from 'mobx/lib/mobx'
+import {types, applySnapshot, flow} from 'mobx-state-tree'
 import GalleryStore from './gallery/model/GalleryStore'
 import GalleryLoader from '../services/loaders/GalleryLoader'
 
-export default class RootStore {
-    @observable data = null
+const RootStore = types
+    .model("RootStore", {
+        galleryStore: GalleryStore,
+    })
+    .views(self => ({
+        get isReady() {
+            return self.galleryStore.amountOfImages > 0
+        }
+    }))
+    .actions(self => ({
+        loadData() {
+            new GalleryLoader().load((data) => {
+                self.galleryStore.setup(data)
+            })
+        },
+        loadDataFlow: flow(function* loadDataFlow() {
+            const response = yield GalleryLoader.fetch()
+            const galleryData = yield response.json()
+            applySnapshot(self.galleryStore, { data: galleryData })
+        }),
+    }))
 
-    constructor() {
-        this.galleryStore = new GalleryStore()
-    }
-
-    @computed get isReady() {
-        return this.galleryStore.data != null
-    }
-
-    @action requestData() {
-        new GalleryLoader().load((data) => {
-            this.galleryStore.setup(data)
-        })
-    }
-}
+export default RootStore

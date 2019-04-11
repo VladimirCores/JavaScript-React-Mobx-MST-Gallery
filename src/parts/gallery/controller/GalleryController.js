@@ -33,7 +33,7 @@ export default class GalleryController extends GalleryComponent
         document.onkeydown = null
     }
 
-    get selectedImage() { return this.store.selectedImageVO }
+    get selectedImage() { return this.store.selectedImage }
 
     renderLightRoom = () =>
         <LightRoom title={this.selectedImage.title}>
