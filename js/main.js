@@ -1,224 +1,214 @@
-class DomElement {
-  constructor(parent, dom) {
+function DomElement(parent, dom) {
     this.parent = parent
     this.dom = dom
     this.domElements = []
-    this.dom.className = this.constructor.name
-  }
 
-  addElement(element) { this.domElements.push(element) }
+    this.addElement = function (element) { this.domElements.push(element) }
 
-  deselect() { /* abstract */ this.domElements.forEach((domElement) => domElement.deselect())  }
-  select() { /* abstract */ this.domElements.forEach((domElement) => domElement.select())  }
-  update(data) { /* abstract */ this.domElements.forEach((domElement) => domElement.update(data)) }
+    this.deselect = function () { /* abstract */ this.domElements.forEach(function(de) { de.deselect() }) }
+    this.select = function () { /* abstract */ this.domElements.forEach(function(de) { de.select() }) }
+    this.update = function (data) { /* abstract */ this.domElements.forEach(function(de) { de.update(data) }) }
 
-  show() {
-    this.domElements.forEach((domElement) => domElement.show())
-    this.parent.appendChild(this.dom)
-  }
+    this.show = function () {
+        this.domElements.forEach(function(de) { de.show() })
+        this.parent.appendChild(this.dom)
+    }
 
-  hide() {
-    this.parent.removeChild(this.dom)
-  }
+    this.hide = function () {
+        this.parent.removeChild(this.dom)
+    }
 
-  dispose() {
-    if (this.dom.parentNode != null)
-      this.hide()
+    this.dispose = function () {
+        if (this.dom.parentNode != null)
+            this.hide()
 
-    this.dom = null
-    this.parent = null
-  }
+        this.dom = null
+        this.parent = null
+    }
 }
 
-class Spinner extends DomElement {
-  constructor(parent) {
-    const dom = document.createElement("div")
-    super(parent, dom)
-    const domSpin = document.createElement("div")
-    domSpin.className = dom.className + "_spin"
+function Spinner(parent) {
+    var dom = document.createElement('div')
+    DomElement.call(this, parent, dom)
+    dom.className = 'Spinner'
+    var domSpin = document.createElement('div')
+    domSpin.className = dom.className + '_spin'
     dom.appendChild(domSpin)
-  }
 }
 
-class GalleryLoader {
-  static get API_GALLERY_URL() {
-    return 'http://localhost:4321/gallery'
-  }
+function GalleryLoader() {
+    var API_GALLERY_URL = 'http://localhost:4321/gallery'
+    var xmlHttp = new XMLHttpRequest()
 
-  constructor() {
-    this.xmlHttp = new XMLHttpRequest()
-  }
-
-  load(callback) {
-    let theLoader = this.xmlHttp
-    theLoader.onreadystatechange = function() {
-      if (theLoader.readyState === 4
-      && theLoader.status === 200)
-      {
-        const response = theLoader.responseText
-        theLoader.onreadystatechange = null
-        callback(JSON.parse(response))
-      }
-    }.bind(this)
-    setTimeout(() => {
-      theLoader.open("GET", GalleryLoader.API_GALLERY_URL, true) // true for asynchronous
-      theLoader.send(null)
-    }, 1000)
-  }
+    this.load = function (callback) {
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState === 4
+                && xmlHttp.status === 200)
+            {
+                var response = xmlHttp.responseText
+                xmlHttp.onreadystatechange = null
+                callback(JSON.parse(response))
+            }
+        }
+        setTimeout(() => {
+            xmlHttp.open('GET', API_GALLERY_URL, true) // true for asynchronous
+            xmlHttp.send(null)
+        }, 1000)
+    }
 }
 
-class Thumb extends DomElement{
-  constructor(parent, width, height, url) {
-    const dom = document.createElement('div')
-    super(parent, dom)
-    let style = dom.style
+function Thumb(parentDom, width, height, url) {
+    var dom = document.createElement('div')
+    DomElement.call(this, parentDom, dom);
+    dom.className = 'Thumb'
+    var style = dom.style
     style.width = width + 'px'
     style.height = height + 'px'
     style.backgroundImage = `url(${url})`
-  }
 
-  deselect() { this.highlight = false }
-  select() {
-    this.highlight = true
-    this.dom.scrollIntoView(false)
-  }
+    this.deselect = function () { this.setHighlight(false) }
+    this.select = function () {
+        this.setHighlight(true)
+        this.dom.scrollIntoView(false)
+    }
 
-  set highlight(value) {
-    const HIGHLIGHT_CLASS_NAME = ' highlight'
-    this.dom.className = value ?
-        this.dom.className + HIGHLIGHT_CLASS_NAME
-      : this.dom.className.replace(HIGHLIGHT_CLASS_NAME, '')
-  }
+    this.setHighlight = function (value) {
+        var HIGHLIGHT_CLASS_NAME = ' highlight'
+        this.dom.className = value ?
+            this.dom.className + HIGHLIGHT_CLASS_NAME
+            : this.dom.className.replace(HIGHLIGHT_CLASS_NAME, '')
+    }
 }
 
-class LightRoom extends DomElement {
-  constructor(parentDom) {
-    const dom = document.createElement("div")
-    super(parentDom, dom)
-  }
+function LightRoom(parentDom) {
+    var dom = document.createElement('div')
+    DomElement.call(this, parentDom, dom);
+    dom.className = 'LightRoom'
 }
 
-class Image extends DomElement {
-  constructor(parentDom, width, height, url) {
-    const dom = document.createElement("img")
-    super(parentDom, dom)
-    let style = dom.style
-    style.width = width + "px"
+function Image(parentDom, width, height) {
+    var dom = document.createElement('img')
+    DomElement.call(this, parentDom, dom);
+    dom.className = 'Image'
+    var style = dom.style
+    style.width = width + 'px'
     style.height = 'auto'
-    this.update(url)
-  }
 
-  update(url) { this.dom.src = url }
+    this.update = function(url) { this.dom.src = url }
 }
 
-class Gallery extends DomElement {
-  constructor(parent) {
-    const dom = document.createElement("div")
-    super(parent, dom)
+function Gallery(parentDom) {
+    var dom = document.createElement('div')
+    DomElement.call(this, parentDom, dom);
+    dom.className = 'Gallery'
     this.selectedElement = null
-  }
 
-  select(nextSelectedIndex) {
-    let nextSelectedElement = this.domElements[nextSelectedIndex]
-    if (this.selectedElement) this.selectedElement.deselect()
-    this.selectedElement = nextSelectedElement
-    nextSelectedElement.select()
-  }
+    this.select = function(nextSelectedIndex) {
+        var nextSelectedElement = this.domElements[nextSelectedIndex]
+        if (this.selectedElement) this.selectedElement.deselect()
+        this.selectedElement = nextSelectedElement
+        nextSelectedElement.select()
+    }
 }
 
-const Keyaboard = {
+Spinner.prototype = new DomElement;
+Thumb.prototype = new DomElement;
+Image.prototype = new DomElement;
+LightRoom.prototype = new DomElement;
+Gallery.prototype = new DomElement;
+
+var Keyaboard = {
   ENTER: 13,
   ARROW_LEFT: 37,
   ARROW_RIGHT: 39
 };
 
-class GalleryController {
-  constructor(gallery) {
+function GalleryController(gallery) {
     /* VIEW */
     this.gallery = gallery
     this.lightroom = null
     /* MODEL */
     this.selectedIndex = 0
     this.images = []
-  }
 
-  setup(jsonData) {
-    let galleryDom = this.gallery
-    this.images = jsonData.images
-    this.images.forEach((imageVO) => {
-      let thumbVO = imageVO.thumb
-      let thumbDom = new Thumb(
-        galleryDom.dom,
-        thumbVO.width,
-        thumbVO.height,
-        thumbVO.path + thumbVO.name
-      )
+    this.setup = function(jsonData) {
+        var galleryDom = this.gallery
+        this.images = jsonData.images
+        this.images.forEach((imageVO) => {
+            var thumbVO = imageVO.thumb
+            var thumbDom = new Thumb(
+                galleryDom.dom,
+                thumbVO.width,
+                thumbVO.height,
+                thumbVO.path + thumbVO.name
+            )
 
-      galleryDom.addElement(thumbDom)
-    })
+            galleryDom.addElement(thumbDom)
+        })
 
-    document.onkeydown = (event) => {
-      event.stopImmediatePropagation()
-      event = event || window.event
-      if (event.keyCode === Keyaboard.ARROW_LEFT) {
-        this.selectNext(-1)
+        document.onkeydown = (event) => {
+            event.stopImmediatePropagation()
+            event = event || window.event
+            if (event.keyCode === Keyaboard.ARROW_LEFT) {
+                this.selectNext(-1)
 
-      }
-      else if (event.keyCode === Keyaboard.ARROW_RIGHT) {
-        this.selectNext(1)
-      }
-      else if (event.keyCode === Keyaboard.ENTER) {
-        if (!this.lightroom) this.expandLightRoom(this.selectedIndex)
-        else this.collapseLightRoom()
-      }
+            }
+            else if (event.keyCode === Keyaboard.ARROW_RIGHT) {
+                this.selectNext(1)
+            }
+            else if (event.keyCode === Keyaboard.ENTER) {
+                if (!this.lightroom) this.expandLightRoom(this.selectedIndex)
+                else this.collapseLightRoom()
+            }
+        }
     }
-  }
 
-  updateLightRoom(index) {
-    let imageVO = this.images[index]
-    let url = imageVO.path + imageVO.name
-    this.lightroom.update(url)
-  }
+    this.updateLightRoom = function(index) {
+        var imageVO = this.images[index]
+        var url = imageVO.path + imageVO.name
+        this.lightroom.update(url)
+    }
 
-  collapseLightRoom() {
-    this.lightroom.dispose()
-    this.lightroom = null
-  }
+    this.collapseLightRoom = function() {
+        this.lightroom.dispose()
+        this.lightroom = null
+    }
 
-  expandLightRoom(index) {
-    let imageVO = this.images[index]
-    this.lightroom = new LightRoom(this.gallery.parent)
-    this.lightroom.addElement(new Image(
-      this.lightroom.dom,
-      imageVO.width,
-      imageVO.height,
-      imageVO.path + imageVO.name
-    ))
-    this.lightroom.show()
-  }
+    this.expandLightRoom = function(index) {
+        var imageVO = this.images[index]
+        var url = imageVO.path + imageVO.name;
+        this.lightroom = new LightRoom(this.gallery.parent)
+        this.lightroom.addElement(new Image(
+            this.lightroom.dom,
+            imageVO.width,
+            imageVO.height
+        ))
+        this.lightroom.update(url)
+        this.lightroom.show()
+    }
 
-  select(index) {
-    this.selectedIndex = index
-    this.gallery.select(index)
-  }
+    this.select = function(index) {
+        this.selectedIndex = index
+        this.gallery.select(index)
+    }
 
-  selectNext(offset) {
-    let amountOfImages = this.images.length
-    let nextSelectedIndex = this.selectedIndex + offset
-    nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
-    this.select(nextSelectedIndex)
-    if (this.lightroom)
-      this.updateLightRoom(nextSelectedIndex)
-  }
+    this.selectNext = function(offset) {
+        var amountOfImages = this.images.length
+        var nextSelectedIndex = this.selectedIndex + offset
+        nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
+        this.select(nextSelectedIndex)
+        if (this.lightroom)
+            this.updateLightRoom(nextSelectedIndex)
+    }
 }
 
 // MAIN PROCESS
 (function () {
-  const domRoot = document.getElementById("Root")
-  let gallery = new Gallery(domRoot)
-  let spinner = new Spinner(domRoot)
+  var domRoot = document.getElementById('Root')
+  var gallery = new Gallery(domRoot)
+  var spinner = new Spinner(domRoot)
 
-  let controller = new GalleryController(gallery)
+  var controller = new GalleryController(gallery)
 
   new GalleryLoader().load(function (jsonData) {
     controller.setup(jsonData)
