@@ -4,3 +4,5 @@
 /data/generator/node_modules
 /data/generator/package-lock.json
 /img/gallery/*
+/dist/
+/node_modules
