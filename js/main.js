@@ -1,3 +1,30 @@
+class GalleryLoader {
+    static get API_GALLERY_URL() {
+        return 'http://localhost:4321/gallery'
+    }
+
+    constructor() {
+        this.xmlHttp = new XMLHttpRequest()
+    }
+
+    load(callback) {
+        let theLoader = this.xmlHttp
+        theLoader.onreadystatechange = function() {
+            if (theLoader.readyState === 4
+                && theLoader.status === 200)
+            {
+                const response = theLoader.responseText
+                theLoader.onreadystatechange = null
+                callback(JSON.parse(response))
+            }
+        }.bind(this)
+        setTimeout(() => {
+            theLoader.open("GET", GalleryLoader.API_GALLERY_URL, true) // true for asynchronous
+            theLoader.send(null)
+        }, 1000)
+    }
+}
+
 class DomElement {
   constructor(parent, dom) {
     this.parent = parent
@@ -8,9 +35,15 @@ class DomElement {
 
   addElement(element) { this.domElements.push(element) }
 
-  deselect() { /* abstract */ this.domElements.forEach((domElement) => domElement.deselect())  }
-  select() { /* abstract */ this.domElements.forEach((domElement) => domElement.select())  }
-  update(data) { /* abstract */ this.domElements.forEach((domElement) => domElement.update(data)) }
+  deselect() {
+    this.domElements.forEach(
+        (domElement) => domElement.deselect()) }
+  select() {
+    this.domElements.forEach(
+        (domElement) => domElement.select()) }
+  update(data) {
+    this.domElements.forEach(
+        (domElement) => domElement.update(data)) }
 
   show() {
     this.domElements.forEach((domElement) => domElement.show())
@@ -29,44 +62,6 @@ class DomElement {
     this.parent = null
   }
 }
-
-class Spinner extends DomElement {
-  constructor(parent) {
-    const dom = document.createElement("div")
-    super(parent, dom)
-    const domSpin = document.createElement("div")
-    domSpin.className = dom.className + "_spin"
-    dom.appendChild(domSpin)
-  }
-}
-
-class GalleryLoader {
-  static get API_GALLERY_URL() {
-    return 'http://localhost:4321/gallery'
-  }
-
-  constructor() {
-    this.xmlHttp = new XMLHttpRequest()
-  }
-
-  load(callback) {
-    let theLoader = this.xmlHttp
-    theLoader.onreadystatechange = function() {
-      if (theLoader.readyState === 4
-      && theLoader.status === 200)
-      {
-        const response = theLoader.responseText
-        theLoader.onreadystatechange = null
-        callback(JSON.parse(response))
-      }
-    }.bind(this)
-    setTimeout(() => {
-      theLoader.open("GET", GalleryLoader.API_GALLERY_URL, true) // true for asynchronous
-      theLoader.send(null)
-    }, 1000)
-  }
-}
-
 class Thumb extends DomElement{
   constructor(parent, width, height, url) {
     const dom = document.createElement('div')
@@ -90,14 +85,12 @@ class Thumb extends DomElement{
       : this.dom.className.replace(HIGHLIGHT_CLASS_NAME, '')
   }
 }
-
 class LightRoom extends DomElement {
   constructor(parentDom) {
     const dom = document.createElement("div")
     super(parentDom, dom)
   }
 }
-
 class Image extends DomElement {
   constructor(parentDom, width, height, url) {
     const dom = document.createElement("img")
@@ -110,7 +103,6 @@ class Image extends DomElement {
 
   update(url) { this.dom.src = url }
 }
-
 class Gallery extends DomElement {
   constructor(parent) {
     const dom = document.createElement("div")
@@ -124,6 +116,15 @@ class Gallery extends DomElement {
     this.selectedElement = nextSelectedElement
     nextSelectedElement.select()
   }
+}
+class Spinner extends DomElement {
+    constructor(parent) {
+        const dom = document.createElement("div")
+        super(parent, dom)
+        const domSpin = document.createElement("div")
+        domSpin.className = dom.className + "_spin"
+        dom.appendChild(domSpin)
+    }
 }
 
 const Keyaboard = {
@@ -229,3 +230,4 @@ class GalleryController {
 
   spinner.show()
 })()
+
