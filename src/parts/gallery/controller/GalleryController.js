@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 import {observer, inject} from 'mobx-react'
 import Keyboard from '../../../consts/Keyboard'
 import GalleryComponent from '../view/base/GalleryComponent'
@@ -9,54 +9,56 @@ import Image from '../view/Image'
 
 @inject('galleryStore')
 @observer
-export default class GalleryController extends GalleryComponent
-{
-    onDocumentKeyboardNavigation = (event) => {
-        event.stopImmediatePropagation()
-        event = event || window.event
-        if (event.keyCode === Keyboard.ARROW_LEFT) {
-            this.store.selectNext(-1)
-        }
-        else if (event.keyCode === Keyboard.ARROW_RIGHT) {
-            this.store.selectNext(1)
-        }
-        else if (event.keyCode === Keyboard.ENTER) {
-            this.store.toggleLightRoom()
-        }
-    }
+export default class GalleryController extends GalleryComponent {
 
-    componentDidMount() {
-        document.onkeydown = this.onDocumentKeyboardNavigation
-    }
+	onDocumentKeyboardNavigation = (event) => {
+		event.stopImmediatePropagation()
+		event = event || window.event
+		if (event.keyCode === Keyboard.ARROW_LEFT) {
+			this.store.selectNext(-1)
+		}
+		else if (event.keyCode === Keyboard.ARROW_RIGHT) {
+			this.store.selectNext(1)
+		}
+		else if (event.keyCode === Keyboard.ENTER) {
+			this.store.toggleLightRoom()
+		}
+	}
 
-    componentWillUnmount() {
-        document.onkeydown = null
-    }
+	componentDidMount() {
+		document.onkeydown = this.onDocumentKeyboardNavigation
+	}
 
-    get selectedImage() { return this.store.selectedImageVO }
+	componentWillUnmount() {
+		document.onkeydown = null
+	}
 
-    renderLightRoom = () =>
-        <LightRoom title={this.selectedImage.title}>
-            <Image width={this.selectedImage.width}
-                   height={this.selectedImage.height}
-                   url={this.store.selectedImageUrl}
-            />
-        </LightRoom>
+	get selectedImage() {
+		return this.store.selectedImageVO
+	}
 
-    renderThumbs = () => this.store.images.map((imageVO, index) => {
-        let thumbVO = imageVO.thumb
-        return <Thumb key={index}
-          selected={this.store.isSelected(index)}
-          width={thumbVO.width}
-          height={thumbVO.height}
-          url={thumbVO.path + thumbVO.name}
-        />
-    })
+	renderLightRoom = () =>
+		<LightRoom title={this.selectedImage.title}>
+			<Image width={this.selectedImage.width}
+			       height={this.selectedImage.height}
+			       url={this.store.selectedImageUrl}
+			/>
+		</LightRoom>
 
-    render() {
-        return <Fragment>
-            <Gallery> { this.renderThumbs() } </Gallery>
-            { this.store.lightRoomVisible && this.renderLightRoom() }
-        </Fragment>
-    }
+	renderThumbs = () => this.store.images.map((imageVO, index) => {
+		let thumbVO = imageVO.thumb
+		return <Thumb key={index}
+		              selected={this.store.isSelected(index)}
+		              width={thumbVO.width}
+		              height={thumbVO.height}
+		              url={thumbVO.path + thumbVO.name}
+		/>
+	})
+
+	render() {
+		return <Fragment>
+			<Gallery> {this.renderThumbs()} </Gallery>
+			{this.store.lightRoomVisible && this.renderLightRoom()}
+		</Fragment>
+	}
 }

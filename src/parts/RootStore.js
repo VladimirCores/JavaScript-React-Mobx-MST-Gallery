@@ -3,19 +3,17 @@ import GalleryStore from './gallery/model/GalleryStore'
 import GalleryLoader from '../services/loaders/GalleryLoader'
 
 export default class RootStore {
-    @observable data = null
+	constructor() {
+		this.galleryStore = new GalleryStore()
+	}
 
-    constructor() {
-        this.galleryStore = new GalleryStore()
-    }
+	@computed get isReady() {
+		return this.galleryStore.data != null
+	}
 
-    @computed get isReady() {
-        return this.galleryStore.data != null
-    }
-
-    @action requestData() {
-        new GalleryLoader().load((data) => {
-            this.galleryStore.setup(data)
-        })
-    }
+	@action requestData() {
+		new GalleryLoader().load((data) => {
+			this.galleryStore.setup(data)
+		})
+	}
 }
