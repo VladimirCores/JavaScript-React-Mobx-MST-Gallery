@@ -2,54 +2,55 @@ import GalleryLoader from './loader/GalleryLoader'
 import {observable, action, computed} from 'mobx'
 
 class GalleryStore {
-    @observable selectedIndex = 0
-    @observable lightRoomVisible = false
-    @observable dataLoading = false
-    @observable data = null
+	@observable selectedIndex = 0
+	@observable lightRoomVisible = false
+	@observable dataLoading = false
+	@observable data = null
 
-    constructor() {
-        this.requestData();
-    }
+	constructor() {
+		this.requestData()
+	}
 
-    isSelected(index) {
-        return this.selectedIndex === index
-    }
+	@action toggleLightRoom() {
+		this.lightRoomVisible = !this.lightRoomVisible
+	}
 
-    @computed get images() {
-        return this.data ? this.data.images : []
-    }
+	@action selectNext(offset) {
+		let amountOfImages = this.amountOfImages
+		let nextSelectedIndex = this.selectedIndex + offset
+		nextSelectedIndex = (nextSelectedIndex < 0 ?
+			amountOfImages - 1 : nextSelectedIndex) % amountOfImages
+		this.selectedIndex = nextSelectedIndex
+	}
 
-    @computed get amountOfImages() {
-        return this.images.length
-    }
+	@action requestData() {
+		this.dataLoading = true
+		new GalleryLoader().load((data) => {
+			this.dataLoading = false
+			this.data = data
+		})
+	}
 
-    @computed get selectedImageVO() {
-        return this.images[this.selectedIndex]
-    }
+	isSelected(index) {
+		return this.selectedIndex === index
+	}
 
-    @computed get selectedImageUrl() {
-        const vo = this.selectedImageVO
-        return vo.path + vo.name
-    }
+	@computed get images() {
+		return this.data ? this.data.images : []
+	}
 
-    @action toggleLightRoom() {
-        this.lightRoomVisible = !this.lightRoomVisible
-    }
+	@computed get amountOfImages() {
+		return this.images.length
+	}
 
-    @action selectNext(offset) {
-        let amountOfImages = this.amountOfImages
-        let nextSelectedIndex = this.selectedIndex + offset
-        nextSelectedIndex = (nextSelectedIndex < 0 ? amountOfImages - 1 : nextSelectedIndex) % amountOfImages
-        this.selectedIndex = nextSelectedIndex
-    }
+	@computed get selectedImageVO() {
+		return this.images[this.selectedIndex]
+	}
 
-    @action requestData() {
-        this.dataLoading = true
-        new GalleryLoader().load((data) => {
-            this.dataLoading = false
-            this.data = data
-        })
-    }
+	@computed get selectedImageUrl() {
+		const vo = this.selectedImageVO
+		return vo.path + vo.name
+	}
 }
 
 export default GalleryStore

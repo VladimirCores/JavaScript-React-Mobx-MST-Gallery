@@ -6,8 +6,8 @@ import GalleryStore from './model/GalleryStore'
 import GalleryController from './view/GalleryController'
 
 ReactDOM.render(
-    <Provider galleryStore={new GalleryStore()}>
-        <GalleryController/>
-    </Provider>,
-    document.getElementById('Root')
+	<Provider galleryStore={new GalleryStore()}>
+		<GalleryController/>
+	</Provider>,
+	document.getElementById('Root')
 )
