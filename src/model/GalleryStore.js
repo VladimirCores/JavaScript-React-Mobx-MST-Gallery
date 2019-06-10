@@ -15,7 +15,7 @@ class GalleryStore {
 	}
 
 	@action selectNext(offset) {
-		let amountOfImages = this.amountOfImages
+		let amountOfImages = this.images.length
 		let nextSelectedIndex = this.selectedIndex + offset
 		nextSelectedIndex = (nextSelectedIndex < 0 ?
 			amountOfImages - 1 : nextSelectedIndex) % amountOfImages
@@ -38,10 +38,6 @@ class GalleryStore {
 
 	@computed get images() {
 		return this.data ? this.data.images : []
-	}
-
-	@computed get amountOfImages() {
-		return this.images.length
 	}
 
 	@computed get selectedImageVO() {
