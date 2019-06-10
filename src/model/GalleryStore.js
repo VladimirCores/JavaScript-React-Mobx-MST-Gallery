@@ -4,7 +4,6 @@ import {observable, action, computed} from 'mobx'
 class GalleryStore {
 	@observable selectedIndex = 0
 	@observable lightRoomVisible = false
-	@observable dataLoading = false
 	@observable data = null
 
 	constructor() {
@@ -24,15 +23,17 @@ class GalleryStore {
 	}
 
 	@action requestData() {
-		this.dataLoading = true
 		new GalleryLoader().load((data) => {
-			this.dataLoading = false
 			this.data = data
 		})
 	}
 
 	isSelected(index) {
 		return this.selectedIndex === index
+	}
+
+	@computed get dataLoading() {
+		return this.data == null
 	}
 
 	@computed get images() {
