@@ -1,5 +1,6 @@
 import GalleryLoader from './loader/GalleryLoader'
 import {observable, action, computed} from 'mobx'
+import {computedFn} from 'mobx-utils'
 
 class GalleryStore {
 	@observable selectedIndex = 0
@@ -28,9 +29,9 @@ class GalleryStore {
 		})
 	}
 
-	isSelected(index) {
+	isSelected = computedFn(function (index) {
 		return this.selectedIndex === index
-	}
+	})
 
 	@computed get dataLoading() {
 		return this.data == null
