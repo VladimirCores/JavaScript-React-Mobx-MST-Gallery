@@ -1,5 +1,5 @@
 import GalleryLoader from './loader/GalleryLoader'
-import {observable, action, computed} from 'mobx'
+import {observable, action, computed, autorun, when, reaction} from 'mobx'
 import {computedFn} from 'mobx-utils'
 
 class GalleryStore {
@@ -9,6 +9,33 @@ class GalleryStore {
 
 	constructor() {
 		this.requestData()
+		autorun((reaction) => {
+			console.log(`> autorun: selectedIndex has changed: ${this.selectedIndex}`)
+			if (this.selectedIndex === 5)
+			{
+				reaction.dispose()
+				throw new Error("Selected value is 5")
+			}
+		}, {
+			onError(e) {
+				console.error(`> autorun: Error, reaction disposed: ${e}`)
+			}
+		})
+
+		when(
+			() => this.lightRoomVisible && this.selectedIndex === 2,
+			() => {
+				console.log('> when: Lightroom show third item')
+			}
+		)
+
+		reaction(
+			() => this.selectedIndex,
+			(selectedIndex, reaction) => {
+				console.log(`> reaction: selectedIndex = ${selectedIndex}`)
+				// new GalleryLoader().updateSettings("selectedIndex", selectedIndex)
+			}
+		)
 	}
 
 	@action toggleLightRoom() {
