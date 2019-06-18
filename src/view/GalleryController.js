@@ -1,5 +1,7 @@
 import React, {Fragment} from 'react'
 import {observer, inject} from 'mobx-react'
+import DevTools from 'mobx-react-devtools'
+
 import Keyboard from '../consts/Keyboard'
 import DomElement from './base/DomElement'
 import Spinner from './misc/Spinner'
@@ -56,6 +58,7 @@ export default class GalleryController extends DomElement {
 		<Fragment>
 			<Gallery> {this.renderThumbs()} </Gallery>
 			{this.store.lightRoomVisible && this.renderLightRoom()}
+			<DevTools />
 		</Fragment>
 
 	render() {
