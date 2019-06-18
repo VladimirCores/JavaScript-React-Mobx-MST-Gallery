@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react'
 import {observer, inject} from 'mobx-react'
-import DevTools from 'mobx-react-devtools'
 
 import Keyboard from '../consts/Keyboard'
 import DomElement from './base/DomElement'
@@ -39,7 +38,6 @@ export default class GalleryController extends DomElement {
 		<Fragment>
 			<Gallery> {this.renderThumbs()} </Gallery>
 			{this.store.lightRoomVisible && <LightRoom data={this.store.selectedImage}/>}
-			<DevTools />
 		</Fragment>
 
 	render() {
