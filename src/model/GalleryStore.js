@@ -1,9 +1,9 @@
 import GalleryLoader from './loader/GalleryLoader'
 import {observable, action, computed, autorun, when, reaction} from 'mobx'
-import {computedFn} from 'mobx-utils'
 
 class GalleryStore {
 	@observable selectedIndex = 0
+	@observable selectedImage = { image:null }
 	@observable lightRoomVisible = false
 	@observable data = null
 
@@ -47,18 +47,19 @@ class GalleryStore {
 		let nextSelectedIndex = this.selectedIndex + offset
 		nextSelectedIndex = (nextSelectedIndex < 0 ?
 			amountOfImages - 1 : nextSelectedIndex) % amountOfImages
+		this.selectedImageVO.thumb.selected = false
 		this.selectedIndex = nextSelectedIndex
+		this.selectedImage.image = this.selectedImageVO
+		this.selectedImageVO.thumb.selected = true
 	}
 
 	@action requestData() {
 		new GalleryLoader().load((data) => {
 			this.data = data
+			this.selectedImage.image = this.selectedImageVO
+			this.selectedImageVO.thumb.selected = true
 		})
 	}
-
-	isSelected = computedFn(function (index) {
-		return this.selectedIndex === index
-	})
 
 	@computed get dataLoading() {
 		return this.data == null

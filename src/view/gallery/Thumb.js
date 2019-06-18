@@ -1,22 +1,27 @@
 import React from 'react'
 import DomElement from '../base/DomElement'
+import {observer} from 'mobx-react'
 
-class Thumb extends DomElement {
+@observer class Thumb extends DomElement {
 	get className() {
 		return super.className +
-			(this.props.selected ? ' highlight' : '')
+			(this.thumb.selected ? ' highlight' : '')
+	}
+
+	get thumb() {
+		return this.props.data
 	}
 
 	componentDidUpdate() {
-		if (this.props.selected)
+		if (this.thumb.selected)
 			this.refs.dom.scrollIntoView(false)
 	}
 
 	render() {
 		const style = {
-			width: this.props.width,
-			height: this.props.height,
-			backgroundImage: `url(${this.props.url})`
+			width: this.thumb.width,
+			height: this.thumb.height,
+			backgroundImage: `url(${this.thumb.path + this.thumb.name})`
 		}
 		return (
 			<div className={this.className} ref="dom" style={style}/>

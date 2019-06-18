@@ -27,34 +27,40 @@ async function Generate() {
   let counter = IMAGES_COUNT
   while (counter--)
   {
-    let url = FakerImage.imageUrl(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_THEME)
+    let url = FakerImage.imageUrl(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_THEME, false, true)
     let imageName = `${IMAGE_PREFIX}${counter}` + IMAGE_EXT
     let imagePath = OUTPUT_DIR_ROOT + OUTPUT_DIR + imageName
-    const { filename } = await ImageDownload.image({ url:url, dest: imagePath })
-
     try {
+      const { filename } = await ImageDownload.image({ url:url, dest: imagePath })
+      try {
+        const thumbnail = await ImageThumbnail(filename, IMAGE_THUMB_OPTION)
+        let thumbName = `${IMAGE_PREFIX}${counter}${IMAGE_THUMB_POSTFIX}` + IMAGE_EXT
+        let thumbPath = OUTPUT_DIR_ROOT + OUTPUT_DIR + thumbName
+        await FS.outputFile(thumbPath, thumbnail)
 
-      const thumbnail = await ImageThumbnail(filename, IMAGE_THUMB_OPTION)
-      let thumbName = `${IMAGE_PREFIX}${counter}${IMAGE_THUMB_POSTFIX}` + IMAGE_EXT
-      let thumbPath = OUTPUT_DIR_ROOT + OUTPUT_DIR + thumbName
-      await FS.outputFile(thumbPath, thumbnail)
-
-      images.push({
-        id: FakerRandom.uuid(),
-        title: FakerRandom.words(),
-        thumb: {
-          width: IMAGE_THUMB_WIDTH,
-          height: IMAGE_THUMB_HEIGHT,
+        images.push({
+          id: FakerRandom.uuid(),
+          title: FakerRandom.words(),
+          thumb: {
+            width: IMAGE_THUMB_WIDTH,
+            height: IMAGE_THUMB_HEIGHT,
+            path: OUTPUT_DIR,
+            name: thumbName,
+            selected: false
+          },
+          width: IMAGE_WIDTH,
+          height: IMAGE_HEIGHT,
           path: OUTPUT_DIR,
-          name: thumbName
-        },
-        width: IMAGE_WIDTH,
-        height: IMAGE_HEIGHT,
-        path: OUTPUT_DIR,
-        name: imageName
-      })
+          name: imageName
+        })
 
-    } catch (err) { console.error(err) }
+      } catch (err) {
+        console.error(err)
+      }
+    } catch (err) {
+	    console.log(err);
+	    break;
+    }
   }
   const result = {
     gallery: {
