@@ -3,7 +3,7 @@ import DomElement from '../base/DomElement'
 class Thumb extends DomElement{
   constructor(parent, width, height, url) {
     const dom = document.createElement('div')
-    super(parent, dom)
+    super(parent, dom, "Thumb")
     let style = dom.style
     style.width = width + 'px'
     style.height = height + 'px'

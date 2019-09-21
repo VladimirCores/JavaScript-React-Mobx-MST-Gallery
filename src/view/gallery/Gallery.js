@@ -3,7 +3,7 @@ import DomElement from '../base/DomElement'
 class Gallery extends DomElement {
   constructor(parent) {
     const dom = document.createElement("div")
-    super(parent, dom)
+    super(parent, dom, "Gallery")
     this.selectedElement = null
   }
 

@@ -3,7 +3,7 @@ import DomElement from '../base/DomElement'
 class Image extends DomElement {
   constructor(parentDom, width, height, url) {
     const dom = document.createElement("img")
-    super(parentDom, dom)
+    super(parentDom, dom, "Image")
     let style = dom.style
     style.width = width + "px"
     style.height = 'auto'

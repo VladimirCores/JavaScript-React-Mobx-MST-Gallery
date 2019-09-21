@@ -1,9 +1,9 @@
 class DomElement {
-  constructor(parent, dom) {
+  constructor(parent, dom, className) {
     this.parent = parent
     this.dom = dom
     this.domElements = []
-    this.dom.className = this.constructor.name
+    this.dom.className = className ? className : this.constructor.name
   }
 
   addElement(element) { this.domElements.push(element) }
