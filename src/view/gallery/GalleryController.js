@@ -23,6 +23,7 @@ function GalleryController(input) {
       let nextSelectedIndex = this.state.selectedIndex + offset
       nextSelectedIndex = (nextSelectedIndex < 0 ?
         amountOfImages - 1 : nextSelectedIndex) % amountOfImages
+
       this.setState({selectedIndex: nextSelectedIndex})
     }
 
@@ -50,11 +51,10 @@ function GalleryController(input) {
 
     renderLightRoom() {
       let imageVO = images[this.state.selectedIndex]
+      let imageUrl = imageVO.path + imageVO.name;
       return (
         <LightRoom>
-          <Image width={imageVO.width}
-                 height={imageVO.height}
-                 url={imageVO.path + imageVO.name}/>
+          <Image width={imageVO.width} height={imageVO.height} url={imageUrl}/>
         </LightRoom>
       )
     }
@@ -62,12 +62,12 @@ function GalleryController(input) {
     renderThumbs() {
       return images.map((imageVO, index) => {
         let thumbVO = imageVO.thumb
-        return <Thumb
-          key={index}
-          selected={this.state.selectedIndex === index}
-          width={thumbVO.width}
-          height={thumbVO.height}
-          url={thumbVO.path + thumbVO.name}/>
+	      let thumbUrl = thumbVO.path + thumbVO.name
+        let isSelected = this.state.selectedIndex === index
+
+        return <Thumb key={index}
+          selected={isSelected} url={thumbUrl}
+          width={thumbVO.width} height={thumbVO.height}/>
       })
     }
 
