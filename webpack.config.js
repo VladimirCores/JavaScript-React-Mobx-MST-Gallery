@@ -1,13 +1,31 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
     template: './src/index.html',
     filename: './index.html'
 })
 
+const optimizerPlugin = new TerserPlugin({
+	sourceMap: false,
+	terserOptions: {
+		ecma: 6,
+		module: true,
+		keep_fnames: false,
+		keep_classnames: false,
+	}
+})
+
 module.exports = {
-    mode: 'development',
+    optimization: {
+    minimize: false,
+    minimizer: [optimizerPlugin],
+    // splitChunks: {
+    //   chunks: 'all'
+    // }
+    },
+    mode: 'production',
     entry: {
         app: './src/index.js'
     },
@@ -55,10 +73,4 @@ module.exports = {
             }
         ]
     },
-    optimization: {
-        minimize: false
-        // splitChunks: {
-        //     chunks: 'all'
-        // }
-    }
 }
