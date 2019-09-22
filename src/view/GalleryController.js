@@ -29,8 +29,8 @@ export default class GalleryController extends DomElement {
 		document.onkeydown = null
 	}
 
-	renderThumbs = () => this.store.images.map((imageVO, index) => {
-		return <Thumb key={index} data={imageVO.thumb}/>
+	renderThumbs = () => this.store.images.map((image, index) => {
+		return <Thumb key={index} data={image.thumb}/>
 	})
 
 	renderGallery = () =>
