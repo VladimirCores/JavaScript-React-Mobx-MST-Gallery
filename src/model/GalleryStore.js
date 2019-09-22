@@ -33,7 +33,6 @@ class GalleryStore {
 			() => this.selectedIndex,
 			(selectedIndex, reaction) => {
 				console.log(`> reaction: selectedIndex = ${selectedIndex}`)
-				// new GalleryLoader().updateSettings("selectedIndex", selectedIndex)
 			}
 		)
 	}

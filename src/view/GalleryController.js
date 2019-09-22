@@ -8,17 +8,16 @@ import Gallery from './gallery/Gallery'
 import Thumb from './gallery/Thumb'
 import LightRoom from './gallery/LightRoom'
 
-@inject('galleryStore')
-@observer
+@inject('galleryStore') @observer
 export default class GalleryController extends DomElement {
 
 	onDocumentKeyboardNavigation = (event) => {
 		event = event || window.event
 		event.stopImmediatePropagation()
 		switch (event.keyCode) {
-			case Keyboard.ARROW_LEFT: this.store.selectNext(-1); break
-			case Keyboard.ARROW_RIGHT: this.store.selectNext(1); break
-			case Keyboard.ENTER: this.store.toggleLightRoom(); break
+			case Keyboard.ARROW_LEFT  : this.store.selectNext(-1);    break
+			case Keyboard.ARROW_RIGHT : this.store.selectNext(1);     break
+			case Keyboard.ENTER       : this.store.toggleLightRoom(); break
 		}
 	}
 

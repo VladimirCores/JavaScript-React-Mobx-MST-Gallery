@@ -18,10 +18,11 @@ import {observer} from 'mobx-react'
 	}
 
 	render() {
+		let url = this.thumb.path + this.thumb.name;
 		const style = {
 			width: this.thumb.width,
 			height: this.thumb.height,
-			backgroundImage: `url(${this.thumb.path + this.thumb.name})`
+			backgroundImage: `url(${url})`
 		}
 		return (
 			<div className={this.className} ref="dom" style={style}/>
