@@ -6,6 +6,7 @@ import {observer} from 'mobx-react'
 @observer class LightRoom extends DomElement {
 	get image() { return this.props.data.image }
 	render() {
+		if (this.image == null) return null;
 		return (
 			<div className={this.className}>
 				<h1>IMAGE VIEWER</h1>

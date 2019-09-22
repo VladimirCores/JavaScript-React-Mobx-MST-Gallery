@@ -2,16 +2,14 @@ import GalleryLoader from './loader/GalleryLoader'
 import {observable, action, computed, autorun, when, reaction} from 'mobx'
 
 class GalleryStore {
-	@observable selectedIndex = 0
-	@observable selectedImage = { image:null }
-	@observable lightRoomVisible = false
+	@observable selected = { index: -1, image: null }
 	@observable data = null
 
 	constructor() {
 		this.requestData()
 		autorun((reaction) => {
-			console.log(`> autorun: selectedIndex has changed: ${this.selectedIndex}`)
-			if (this.selectedIndex === 5)
+			console.log(`> autorun: selectedIndex has changed: ${this.selected.index}`)
+			if (this.selected.index === 5)
 			{
 				reaction.dispose()
 				throw new Error("Selected value is 5")
@@ -23,14 +21,14 @@ class GalleryStore {
 		})
 
 		when(
-			() => this.lightRoomVisible && this.selectedIndex === 2,
+			() => this.selected.image && this.selected.index === 2,
 			() => {
 				console.log('> when: Lightroom show third item')
 			}
 		)
 
 		reaction(
-			() => this.selectedIndex,
+			() => this.selected.index,
 			(selectedIndex, reaction) => {
 				console.log(`> reaction: selectedIndex = ${selectedIndex}`)
 			}
@@ -38,25 +36,29 @@ class GalleryStore {
 	}
 
 	@action toggleLightRoom() {
-		this.lightRoomVisible = !this.lightRoomVisible
+		if (this.selected.image == null)
+			this.selected.image = this.currentImage;
+		else this.selected.image = null;
 	}
 
 	@action selectNext(offset) {
 		let amountOfImages = this.images.length
-		let nextSelectedIndex = this.selectedIndex + offset
+		let nextSelectedIndex = this.selected.index + offset
 		nextSelectedIndex = (nextSelectedIndex < 0 ?
 			amountOfImages - 1 : nextSelectedIndex) % amountOfImages
-		this.selectedImageVO.thumb.selected = false
-		this.selectedIndex = nextSelectedIndex
-		this.selectedImage.image = this.selectedImageVO
-		this.selectedImageVO.thumb.selected = true
+
+		this.currentImage.thumb.selected = false
+		this.selected.index = nextSelectedIndex
+		if (this.selected.image)
+			this.selected.image = this.currentImage
+		this.currentImage.thumb.selected = true
 	}
 
 	@action requestData() {
 		new GalleryLoader().load((data) => {
 			this.data = data
-			this.selectedImage.image = this.selectedImageVO
-			this.selectedImageVO.thumb.selected = true
+			this.selected.index = 0;
+			this.currentImage.thumb.selected = true
 		})
 	}
 
@@ -68,12 +70,12 @@ class GalleryStore {
 		return this.data ? this.data.images : []
 	}
 
-	@computed get selectedImageVO() {
-		return this.images[this.selectedIndex]
+	@computed get currentImage() {
+		return this.images[this.selected.index]
 	}
 
-	@computed get selectedImageUrl() {
-		const vo = this.selectedImageVO
+	@computed get currentImageUrl() {
+		const vo = this.currentImage
 		return vo.path + vo.name
 	}
 }

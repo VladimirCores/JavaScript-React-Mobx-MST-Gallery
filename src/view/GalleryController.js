@@ -36,7 +36,7 @@ export default class GalleryController extends DomElement {
 	renderGallery = () =>
 		<Fragment>
 			<Gallery> {this.renderThumbs()} </Gallery>
-			{this.store.lightRoomVisible && <LightRoom data={this.store.selectedImage}/>}
+			<LightRoom data={this.store.selected}/>
 		</Fragment>
 
 	render() {
