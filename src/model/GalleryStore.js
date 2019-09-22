@@ -5,10 +5,11 @@ import {computedFn} from 'mobx-utils'
 class GalleryStore {
 	@observable selectedIndex = 0
 	@observable lightRoomVisible = false
-	@observable data = null
+	@observable galleryData = null
 
 	constructor() {
 		this.requestData()
+
 		autorun((reaction) => {
 			console.log(`> autorun: selectedIndex has changed: ${this.selectedIndex}`)
 			if (this.selectedIndex === 5)
@@ -33,7 +34,6 @@ class GalleryStore {
 			() => this.selectedIndex,
 			(selectedIndex, reaction) => {
 				console.log(`> reaction: selectedIndex = ${selectedIndex}`)
-				// new GalleryLoader().updateSettings("selectedIndex", selectedIndex)
 			}
 		)
 	}
@@ -52,7 +52,7 @@ class GalleryStore {
 
 	@action requestData() {
 		new GalleryLoader().load((data) => {
-			this.data = data
+			this.galleryData = data
 		})
 	}
 
@@ -61,11 +61,11 @@ class GalleryStore {
 	})
 
 	@computed get dataLoading() {
-		return this.data == null
+		return this.galleryData == null
 	}
 
 	@computed get images() {
-		return this.data ? this.data.images : []
+		return this.galleryData ? this.galleryData.images : []
 	}
 
 	@computed get selectedImageVO() {
