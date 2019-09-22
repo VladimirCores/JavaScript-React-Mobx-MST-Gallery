@@ -46,11 +46,12 @@ export default class GalleryController extends DomElement {
 	renderThumbs = () => this.store.images.map((imageVO, index) => {
 		let thumbVO = imageVO.thumb
 		let thumbUrl = thumbVO.path + thumbVO.name;
-		return <Thumb key={index}
-		              selected={this.store.isSelected(index)}
-		              width={thumbVO.width}
-		              height={thumbVO.height}
-		              url={thumbUrl}
+		return <Thumb
+			key       = {index}
+      selected  = {this.store.isSelected(index)}
+      width     = {thumbVO.width}
+      height    = {thumbVO.height}
+      url       = {thumbUrl}
 		/>
 	})
 
