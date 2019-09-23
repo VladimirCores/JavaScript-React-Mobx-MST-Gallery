@@ -65,9 +65,13 @@ function GalleryController(input) {
 	      let thumbUrl = thumbVO.path + thumbVO.name
         let isSelected = this.state.selectedIndex === index
 
-        return <Thumb key={index}
-          selected={isSelected} url={thumbUrl}
-          width={thumbVO.width} height={thumbVO.height}/>
+        return <Thumb
+          key       = {index}
+          selected  = {isSelected}
+          url       = {thumbUrl}
+          width     = {thumbVO.width}
+          height    = {thumbVO.height}
+        />
       })
     }
 
