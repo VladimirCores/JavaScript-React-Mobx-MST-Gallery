@@ -1,13 +1,32 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
-    template: './src/index.html',
-    filename: './index.html'
+	template: './src/index.html',
+	filename: './index.html'
+})
+
+const teaserWebpackPlugin = new TerserPlugin({
+	terserOptions:{
+		ecma: 6,
+		warnings: false,
+		parse: {},
+		compress: {},
+		mangle: false, // Note `mangle.properties` is `false` by default.
+		module: true,
+		output: null,
+		toplevel: false,
+		nameCache: null,
+		ie8: false,
+		keep_classnames: true,
+		keep_fnames: true,
+		safari10: false,
+	},
 })
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: {
         app: './src/index.js'
     },
@@ -18,7 +37,7 @@ module.exports = {
     devServer: {
         contentBase: './dist'
     },
-    plugins: [htmlWebpackPlugin],
+    plugins: [htmlWebpackPlugin, teaserWebpackPlugin],
     module: {
         rules: [
             {
@@ -33,7 +52,7 @@ module.exports = {
                             modules: false,
                             importLoaders: 1,
                             localIdentName: '[name]_[local]_[hash:base64]',
-                            sourceMap: true,
+                            sourceMap: false,
                             minimize: false
                         }
                     }
@@ -58,7 +77,7 @@ module.exports = {
         ]
     },
     optimization: {
-        minimize: false
+        minimize: true
         // splitChunks: {
         //     chunks: 'all'
         // }
